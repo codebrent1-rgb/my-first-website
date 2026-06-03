@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex 功能图谱</title>
+  <style>
+    :root {
+      --ink: #121a1f;
+      --muted: #5d6870;
+      --line: #dbe2e1;
+      --paper: #f7f5ef;
+      --panel: #fffdf8;
+      --panel-2: #eef6f3;
+      --teal: #00856f;
+      --teal-dark: #005d55;
+      --coral: #f06a4d;
+      --gold: #e7b92f;
+      --blue: #2b6cb0;
+      --violet: #6957b8;
+      --shadow: 0 24px 70px rgba(20, 33, 38, 0.13);
+      --radius: 8px;
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(0, 133, 111, 0.07), transparent 34%),
+        linear-gradient(300deg, rgba(240, 106, 77, 0.09), transparent 30%),
+      var(--paper);
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.36;
+      background-image:
+        linear-gradient(rgba(18, 26, 31, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 26, 31, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 75%);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 20;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 6px;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 14px clamp(16px, 4vw, 54px);
+      border-bottom: 1px solid rgba(18, 26, 31, 0.08);
+      background: rgba(247, 245, 239, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar > *,
+    .hero > *,
+    .section-head > *,
+    .overview-grid > *,
+    .feature-grid > *,
+    .surface-grid > *,
+    .notes-grid > *,
+    .flow > * {
+      min-width: 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 780;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(18, 26, 31, 0.18);
+    }
+
+    .brand-mark svg,
+    .icon svg {
+      display: block;
+      width: 18px;
+      height: 18px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav a {
+      padding: 9px 11px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--ink);
+      background: rgba(18, 26, 31, 0.07);
+      outline: none;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(340px, 1.05fr);
+      gap: clamp(28px, 5vw, 70px);
+      align-items: center;
+      padding: clamp(58px, 9vw, 108px) clamp(18px, 5vw, 72px) 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--teal-dark);
+      font-size: 13px;
+      font-weight: 780;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: var(--teal);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 22px;
+      font-size: clamp(44px, 7vw, 92px);
+      line-height: 0.96;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      margin-bottom: 28px;
+      color: #36434a;
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.68;
+    }
+
+    .hero-actions,
+    .filter-bar,
+    .card-tags,
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button,
+    .filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 10px 14px;
+      border: 1px solid rgba(18, 26, 31, 0.13);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 730;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(18, 26, 31, 0.06);
+    }
+
+    .button.primary {
+      color: #fff;
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .button:hover,
+    .filter:hover,
+    .filter:focus-visible,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      outline: none;
+      box-shadow: 0 15px 34px rgba(18, 26, 31, 0.12);
+    }
+
+    .filter.active {
+      color: #fff;
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+
+    .hero-panel {
+      position: relative;
+      width: 100%;
+      min-height: 560px;
+      overflow: hidden;
+      border: 1px solid rgba(18, 26, 31, 0.12);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(231, 185, 47, 0.22), transparent 28%),
+        radial-gradient(circle at 82% 16%, rgba(240, 106, 77, 0.22), transparent 24%),
+        linear-gradient(145deg, #fffdf8, #eaf6f1 74%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(18, 26, 31, 0.09);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    .map-visual {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .floating-stat {
+      position: absolute;
+      left: 28px;
+      bottom: 28px;
+      width: min(310px, calc(100% - 56px));
+      padding: 16px;
+      border: 1px solid rgba(18, 26, 31, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, 0.82);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 48px rgba(18, 26, 31, 0.12);
+    }
+
+    .stat-line {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat-line:last-child {
+      margin-bottom: 0;
+    }
+
+    .meter {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(18, 26, 31, 0.1);
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+    }
+
+    main {
+      padding-bottom: 72px;
+    }
+
+    .section {
+      padding: 76px clamp(18px, 5vw, 72px);
+      border-top: 1px solid rgba(18, 26, 31, 0.08);
+    }
+
+    .section:nth-of-type(even) {
+      background: rgba(255, 253, 248, 0.42);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(260px, 0.5fr);
+      gap: 26px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-kicker {
+      margin-bottom: 9px;
+      color: var(--teal-dark);
+      font-weight: 800;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .section-lead {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.72;
+      overflow-wrap: anywhere;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .layer-card,
+    .feature-card,
+    .surface-card,
+    .note-card {
+      border: 1px solid rgba(18, 26, 31, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.84);
+      box-shadow: 0 18px 44px rgba(18, 26, 31, 0.08);
+    }
+
+    .layer-card {
+      min-height: 244px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .layer-card::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 62px;
+      height: 62px;
+      border: 1px solid rgba(18, 26, 31, 0.12);
+      transform: rotate(10deg);
+      background: rgba(0, 133, 111, 0.08);
+    }
+
+    .layer-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 18px;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .layer-card h3,
+    .feature-card h3,
+    .surface-card h3,
+    .note-card h3 {
+      margin-bottom: 10px;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .layer-card p,
+    .feature-card p,
+    .surface-card p,
+    .note-card p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      line-height: 1.66;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #334149;
+      font-size: 14px;
+    }
+
+    .mini-list li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .mini-list li::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 7px;
+      height: 7px;
+      margin-top: 7px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .result-count {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 272px;
+      overflow: hidden;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .feature-card[hidden] {
+      display: none;
+    }
+
+    .feature-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 18px 18px 0;
+    }
+
+    .icon {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--panel-2);
+      border: 1px solid rgba(18, 26, 31, 0.1);
+    }
+
+    .feature-card[data-accent="coral"] .icon {
+      background: rgba(240, 106, 77, 0.15);
+    }
+
+    .feature-card[data-accent="gold"] .icon {
+      background: rgba(231, 185, 47, 0.18);
+    }
+
+    .feature-card[data-accent="blue"] .icon {
+      background: rgba(43, 108, 176, 0.13);
+    }
+
+    .feature-card[data-accent="violet"] .icon {
+      background: rgba(105, 87, 184, 0.13);
+    }
+
+    .feature-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 0 18px 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 4px 8px;
+      border: 1px solid rgba(18, 26, 31, 0.1);
+      border-radius: 999px;
+      color: #354248;
+      background: rgba(255, 255, 255, 0.62);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    details {
+      margin-top: auto;
+    }
+
+    summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      margin-top: 8px;
+      color: var(--teal-dark);
+      font-weight: 790;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 93, 85, 0.28);
+      font-weight: 800;
+    }
+
+    details[open] summary::after {
+      content: "-";
+    }
+
+    .details-list {
+      display: grid;
+      gap: 8px;
+      margin: 4px 0 0;
+      padding: 12px 0 0 18px;
+      color: #38464d;
+      border-top: 1px solid rgba(18, 26, 31, 0.1);
+      line-height: 1.58;
+    }
+
+    .surface-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .surface-card {
+      padding: 18px;
+      min-height: 238px;
+    }
+
+    .surface-card .surface-label {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .matrix-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(18, 26, 31, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.84);
+      box-shadow: 0 18px 44px rgba(18, 26, 31, 0.08);
+    }
+
+    .matrix {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    .matrix th,
+    .matrix td {
+      padding: 15px 14px;
+      border-bottom: 1px solid rgba(18, 26, 31, 0.09);
+      text-align: center;
+    }
+
+    .matrix th:first-child,
+    .matrix td:first-child {
+      text-align: left;
+      font-weight: 760;
+    }
+
+    .matrix thead th {
+      position: sticky;
+      top: 0;
+      color: #fff;
+      background: var(--ink);
+      font-size: 13px;
+    }
+
+    .matrix tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .status {
+      display: inline-grid;
+      place-items: center;
+      min-width: 28px;
+      min-height: 28px;
+      border-radius: 999px;
+      font-weight: 900;
+    }
+
+    .status.yes {
+      color: var(--teal-dark);
+      background: rgba(0, 133, 111, 0.14);
+    }
+
+    .status.partial {
+      color: #755200;
+      background: rgba(231, 185, 47, 0.22);
+    }
+
+    .status.no {
+      color: #7b3a2a;
+      background: rgba(240, 106, 77, 0.14);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 168px;
+      padding: 18px;
+      border: 1px solid rgba(18, 26, 31, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, 0.84);
+      box-shadow: 0 18px 44px rgba(18, 26, 31, 0.08);
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      width: 20px;
+      height: 2px;
+      background: var(--teal);
+    }
+
+    .flow-step span {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 14px;
+      color: #fff;
+      background: var(--teal-dark);
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .flow-step h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .flow-step p {
+      color: var(--muted);
+      line-height: 1.62;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .note-card {
+      padding: 20px;
+      min-height: 220px;
+    }
+
+    .source-line {
+      max-width: 980px;
+      margin: 28px auto 0;
+      padding: 16px 18px;
+      border-left: 4px solid var(--teal);
+      color: var(--muted);
+      background: rgba(255, 253, 248, 0.72);
+      line-height: 1.68;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 22px;
+      border: 1px dashed rgba(18, 26, 31, 0.28);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 253, 248, 0.7);
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    footer {
+      padding: 34px clamp(18px, 5vw, 72px);
+      color: var(--muted);
+      border-top: 1px solid rgba(18, 26, 31, 0.08);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      max-width: 1440px;
+      margin: 0 auto;
+      font-size: 14px;
+    }
+
+    .mark {
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+
+    @media (max-width: 1080px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .nav {
+        justify-content: flex-start;
+        order: 3;
+      }
+
+      .hero,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-panel {
+        min-height: 520px;
+      }
+
+      .overview-grid,
+      .feature-grid,
+      .notes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .surface-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-step:not(:last-child)::after {
+        right: auto;
+        top: auto;
+        left: 28px;
+        bottom: -9px;
+        width: 2px;
+        height: 18px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .hero {
+        padding-top: 38px;
+      }
+
+      h1 {
+        font-size: 35px;
+        line-height: 1.08;
+        word-break: break-all;
+      }
+
+      .hero-panel {
+        min-height: 430px;
+      }
+
+      .hero-copy {
+        font-size: 16px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+      }
+
+      .map-visual text {
+        font-size: 12px;
+      }
+
+      .floating-stat {
+        left: 16px;
+        bottom: 16px;
+        width: calc(100% - 32px);
+      }
+
+      .overview-grid,
+      .feature-grid,
+      .surface-grid,
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .button,
+      .filter {
+        min-height: 38px;
+        padding: 9px 12px;
+        font-size: 14px;
+      }
+
+      .section {
+        padding-top: 56px;
+        padding-bottom: 56px;
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="topbar" aria-label="页面导航">
+    <a class="brand" href="#top" aria-label="返回页面顶部">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M7 8.5 3.5 12 7 15.5M17 8.5l3.5 3.5L17 15.5M14 5l-4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span>Codex 功能图谱</span>
+    </a>
+    <nav class="nav" aria-label="功能分类">
+      <a href="#overview">总览</a>
+      <a href="#surfaces">使用形态</a>
+      <a href="#features">功能库</a>
+      <a href="#matrix">能力矩阵</a>
+      <a href="#workflow">工作流</a>
+      <a href="#security">安全治理</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="top" class="hero">
+      <div>
+        <div class="eyebrow">OpenAI Codex</div>
+        <h1>面向软件开发全流程的智能编码代理</h1>
+        <p class="hero-copy">
+          Codex 可以写代码、理解代码库、审查变更、调试问题，并把重复的工程任务自动化。这个页面按层级把 Codex 的主要能力组织成一张可浏览的功能图谱。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#features">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 12h16M4 19h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            浏览全部功能
+          </a>
+          <a class="button" href="#matrix">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4zM4 10h16M10 4v16M16 4v16" stroke="currentColor" stroke-width="2"/></svg>
+            </span>
+            查看能力矩阵
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-panel" aria-label="Codex 能力关系图">
+        <svg class="map-visual" viewBox="0 0 760 620" role="img" aria-labelledby="mapTitle mapDesc">
+          <title id="mapTitle">Codex 功能层级可视化</title>
+          <desc id="mapDesc">以 Codex 为中心，连接本地开发、云端任务、自动化、扩展集成、安全治理和程序化接口。</desc>
+          <defs>
+            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#121a1f" flood-opacity="0.16"/>
+            </filter>
+          </defs>
+          <path d="M380 124 C250 150 172 246 188 356 C205 478 326 520 445 488 C574 454 638 330 586 226 C548 151 469 111 380 124Z" fill="#ffffff" opacity="0.58"/>
+          <g stroke="#94a39d" stroke-width="2" fill="none" opacity="0.8">
+            <path d="M380 310 210 190"/>
+            <path d="M380 310 570 190"/>
+            <path d="M380 310 612 366"/>
+            <path d="M380 310 470 502"/>
+            <path d="M380 310 172 416"/>
+            <path d="M380 310 380 86"/>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="282" y="246" width="196" height="128" rx="8" fill="#121a1f"/>
+            <text x="380" y="298" text-anchor="middle" fill="#fff" font-size="31" font-weight="800">Codex</text>
+            <text x="380" y="330" text-anchor="middle" fill="#d6dfdd" font-size="17">Coding Agent</text>
+          </g>
+          <g filter="url(#softShadow)" font-size="16" font-weight="750">
+            <rect x="90" y="146" width="198" height="78" rx="8" fill="#eaf6f1" stroke="#b8d7ce"/>
+            <text x="189" y="178" text-anchor="middle" fill="#005d55">本地开发</text>
+            <text x="189" y="203" text-anchor="middle" fill="#526069" font-size="13">App / CLI / IDE</text>
+            <rect x="468" y="146" width="202" height="78" rx="8" fill="#fff0e9" stroke="#efc4b5"/>
+            <text x="569" y="178" text-anchor="middle" fill="#8d3f2f">云端协作</text>
+            <text x="569" y="203" text-anchor="middle" fill="#526069" font-size="13">Web / Cloud / PR</text>
+            <rect x="506" y="330" width="184" height="80" rx="8" fill="#fff8d8" stroke="#e9d88b"/>
+            <text x="598" y="364" text-anchor="middle" fill="#6e5207">自动化</text>
+            <text x="598" y="389" text-anchor="middle" fill="#526069" font-size="13">Tasks / Actions</text>
+            <rect x="368" y="474" width="204" height="78" rx="8" fill="#eeeafb" stroke="#cabff1"/>
+            <text x="470" y="506" text-anchor="middle" fill="#493c91">扩展集成</text>
+            <text x="470" y="531" text-anchor="middle" fill="#526069" font-size="13">Skills / Plugins / MCP</text>
+            <rect x="70" y="382" width="208" height="78" rx="8" fill="#edf2f6" stroke="#b9ccdc"/>
+            <text x="174" y="414" text-anchor="middle" fill="#254e7d">安全治理</text>
+            <text x="174" y="439" text-anchor="middle" fill="#526069" font-size="13">Sandbox / Approval</text>
+            <rect x="272" y="46" width="216" height="80" rx="8" fill="#fffdf8" stroke="#cfd8d5"/>
+            <text x="380" y="80" text-anchor="middle" fill="#121a1f">程序化接口</text>
+            <text x="380" y="105" text-anchor="middle" fill="#526069" font-size="13">SDK / App Server / exec</text>
+          </g>
+        </svg>
+        <div class="floating-stat" aria-label="能力覆盖摘要">
+          <div class="stat-line"><strong>开发</strong><div class="meter"><span style="width: 92%; background: var(--teal);"></span></div></div>
+          <div class="stat-line"><strong>协作</strong><div class="meter"><span style="width: 84%; background: var(--coral);"></span></div></div>
+          <div class="stat-line"><strong>治理</strong><div class="meter"><span style="width: 88%; background: var(--gold);"></span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Layered Overview</div>
+          <h2>从核心能力到工程系统的三层图谱</h2>
+        </div>
+        <p class="section-lead">Codex 不是单一聊天框，而是一组跨本地、云端、IDE、CI 和团队工具的开发能力。页面将它拆成“做什么”“在哪里做”“如何扩展与治理”。</p>
+      </div>
+      <div class="overview-grid">
+        <article class="layer-card">
+          <span class="layer-index">01</span>
+          <h3>核心开发能力</h3>
+          <p>面向代码本身：生成、理解、调试、测试、重构、审查和解释复杂代码库。</p>
+          <ul class="mini-list">
+            <li>按项目结构和约定生成代码</li>
+            <li>阅读遗留系统并解释组织方式</li>
+            <li>定位缺陷、补测试、验证结果</li>
+          </ul>
+        </article>
+        <article class="layer-card">
+          <span class="layer-index">02</span>
+          <h3>多入口工作形态</h3>
+          <p>同一个编码代理可以在桌面 App、终端、IDE、Web 和云任务中工作。</p>
+          <ul class="mini-list">
+            <li>本地线程、Worktree 和内置终端</li>
+            <li>IDE 上下文、云端委派和 PR 跟进</li>
+            <li>CLI 交互、非交互、远程连接</li>
+          </ul>
+        </article>
+        <article class="layer-card">
+          <span class="layer-index">03</span>
+          <h3>扩展、自动化与治理</h3>
+          <p>用 Skills、Plugins、MCP、Hooks、权限和沙箱把 Codex 接入团队流程。</p>
+          <ul class="mini-list">
+            <li>后台自动化、GitHub Action、SDK</li>
+            <li>AGENTS.md、Memories、Subagents</li>
+            <li>审批、网络策略、企业管理配置</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="surfaces" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Surfaces</div>
+          <h2>四类入口覆盖不同工作节奏</h2>
+        </div>
+        <p class="section-lead">选择入口时，关键不是功能多寡，而是任务在哪里发生：项目目录、编辑器、远程云环境，还是自动化流水线。</p>
+      </div>
+      <div class="surface-grid">
+        <article class="surface-card">
+          <span class="surface-label">Desktop</span>
+          <h3>Codex App</h3>
+          <p>面向多项目并行工作：本地线程、Worktree、云线程、自动化、Git diff、内置终端和浏览器预览。</p>
+          <ul class="mini-list">
+            <li>Local / Worktree / Cloud 模式</li>
+            <li>Review 面板与 PR 反馈处理</li>
+            <li>浏览器批注、图片生成、非代码产物预览</li>
+          </ul>
+        </article>
+        <article class="surface-card">
+          <span class="surface-label">Terminal</span>
+          <h3>Codex CLI</h3>
+          <p>在终端中交互或脚本化运行 Codex，适合本地仓库、快速审查和命令行自动化。</p>
+          <ul class="mini-list">
+            <li>交互 TUI、resume、/review</li>
+            <li>codex exec 非交互模式</li>
+            <li>模型、权限、MCP、主题和补全</li>
+          </ul>
+        </article>
+        <article class="surface-card">
+          <span class="surface-label">IDE</span>
+          <h3>IDE Extension</h3>
+          <p>在 VS Code 兼容编辑器中直接对话、编辑、引用文件，并把大型任务委派到云端。</p>
+          <ul class="mini-list">
+            <li>打开文件和选区作为上下文</li>
+            <li>模型与推理强度切换</li>
+            <li>本地继续或云端 follow-up</li>
+          </ul>
+        </article>
+        <article class="surface-card">
+          <span class="surface-label">Cloud</span>
+          <h3>Codex Web / Cloud</h3>
+          <p>连接 GitHub 后在托管环境中执行任务、查看 diff、继续追问，并创建 Pull Request。</p>
+          <ul class="mini-list">
+            <li>云环境、容器缓存、安装脚本</li>
+            <li>仓库任务和 PR 工作流</li>
+            <li>默认离线代理阶段，可配置网络访问</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Feature Library</div>
+          <h2>按模块筛选 Codex 功能</h2>
+        </div>
+        <p class="section-lead">使用按钮切换功能类别。卡片中的详情可以展开，查看更具体的能力范围。</p>
+      </div>
+      <div class="toolbar">
+        <div class="filter-bar" role="group" aria-label="功能筛选">
+          <button class="filter active" type="button" data-filter="all">全部</button>
+          <button class="filter" type="button" data-filter="local">本地开发</button>
+          <button class="filter" type="button" data-filter="cloud">云端协作</button>
+          <button class="filter" type="button" data-filter="automation">自动化</button>
+          <button class="filter" type="button" data-filter="extension">扩展</button>
+          <button class="filter" type="button" data-filter="security">安全</button>
+          <button class="filter" type="button" data-filter="api">API</button>
+        </div>
+        <div class="result-count" id="resultCount" aria-live="polite"></div>
+      </div>
+      <div class="empty-state" id="emptyState">没有匹配的功能分类。</div>
+      <div class="feature-grid" id="featureGrid">
+        <article class="feature-card" data-category="local" data-accent="coral" data-keywords="写代码 生成 实现 重构 测试 调试">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 9 4 12l4 3M16 9l4 3-4 3M14 5l-4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>代码生成与修改</h3><p>根据自然语言目标生成代码，并贴合现有项目结构、命名和工程约定。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">实现</span><span class="tag">重构</span><span class="tag">测试</span></div><details><summary>展开详情</summary><ul class="details-list"><li>读取仓库上下文后制定修改计划。</li><li>按范围编辑文件，并运行项目命令验证。</li><li>可在本地、Worktree、IDE 或云任务中执行。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local" data-accent="gold" data-keywords="理解 解释 代码库 legacy 架构">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5h14v14H5zM9 9h6M9 13h6M9 17h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>代码库理解</h3><p>阅读复杂或陌生代码库，解释模块边界、数据流、依赖关系和历史实现。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">解释</span><span class="tag">架构</span><span class="tag">导航</span></div><details><summary>展开详情</summary><ul class="details-list"><li>适合接手旧项目或快速定位关键入口。</li><li>可结合 IDE 当前文件、终端输出和仓库说明。</li><li>可通过 AGENTS.md 固化团队阅读路线。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local security" data-accent="blue" data-keywords="review 审查 代码审查 diff PR GitHub">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 11l2 2 4-5M5 4h14v16H5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>代码审查</h3><p>针对 diff、未提交变更、提交或 PR 进行高信号审查，优先发现严重缺陷和边界问题。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">/review</span><span class="tag">PR</span><span class="tag">风险</span></div><details><summary>展开详情</summary><ul class="details-list"><li>CLI 和 App 支持本地 review 流程。</li><li>GitHub PR 可用 @codex review 或自动 review。</li><li>可通过 AGENTS.md 提供仓库审查规则。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local" data-accent="teal" data-keywords="debug 调试 失败 终端 日志 测试">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v4M6.3 6.3l2.8 2.8M4 12h4M6.3 17.7l2.8-2.8M12 20v-4M17.7 17.7l-2.8-2.8M20 12h-4M17.7 6.3l-2.8 2.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>调试与修复</h3><p>根据错误、日志、测试失败或可视化问题定位根因，并提出可验证的修复。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">日志</span><span class="tag">复现</span><span class="tag">验证</span></div><details><summary>展开详情</summary><ul class="details-list"><li>可读取内置终端当前输出。</li><li>可使用浏览器预览或 Computer Use 复现 GUI 问题。</li><li>可把常用测试命令做成本地环境 Action。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local cloud" data-accent="violet" data-keywords="worktree 多任务 并行 Git 分支">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 7v10M17 7a4 4 0 0 0-4 4v6M7 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM7 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>Worktree 与并行任务</h3><p>使用 Git worktree 隔离尝试性修改，让多个线程在同一项目中并行推进。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">隔离</span><span class="tag">并行</span><span class="tag">Git</span></div><details><summary>展开详情</summary><ul class="details-list"><li>App 新线程可选择 Local 或 Worktree。</li><li>自动化也可在后台 worktree 中运行。</li><li>适合同时探索多个方案而不影响主工作区。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="automation" data-accent="gold" data-keywords="automations 自动化 thread automation 定时 后台 triage">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>Automations 后台任务</h3><p>按计划自动运行检查、报告或维护任务，有发现时进入 Triage，无发现可自动归档。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">定时</span><span class="tag">后台</span><span class="tag">Triage</span></div><details><summary>展开详情</summary><ul class="details-list"><li>支持独立自动化和保留上下文的 thread automation。</li><li>可跨一个或多个项目运行。</li><li>可结合 Skills 和插件完成复杂例行流程。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="cloud automation" data-accent="coral" data-keywords="cloud 云端 GitHub PR code review Slack Linear">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 18h12a4 4 0 0 0 .7-7.9A6 6 0 0 0 7.2 8.4 4.5 4.5 0 0 0 6 18Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>云端任务与 PR 协作</h3><p>在托管容器中运行任务、查看 diff、创建 PR，并可通过 GitHub 评论触发 review 或修复。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">Cloud</span><span class="tag">GitHub</span><span class="tag">PR</span></div><details><summary>展开详情</summary><ul class="details-list"><li>云环境支持依赖安装、环境变量和缓存。</li><li>GitHub 集成可触发 @codex review / fix。</li><li>Slack 与 Linear 可作为协作入口或上下文来源。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="extension" data-accent="teal" data-keywords="AGENTS.md instructions 指令 项目约定 规则">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6zM14 4v4h4M9 13h6M9 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>AGENTS.md 项目指导</h3><p>把构建命令、测试要求、代码风格和审查期望写进仓库，让 Codex 每次都遵循。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">持久指令</span><span class="tag">团队约定</span></div><details><summary>展开详情</summary><ul class="details-list"><li>支持全局和项目层级指导。</li><li>靠近当前目录的指导优先级更高。</li><li>适合固化重复反馈和仓库专属流程。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="extension automation" data-accent="blue" data-keywords="skills 技能 skill plugin 插件 工作流">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 3h8v5h5v8h-5v5H8v-5H3V8h5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><div><h3>Skills 与 Plugins</h3><p>Skills 封装可复用工作流，Plugins 则把 Skills、应用连接和 MCP 打包成可安装能力。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">复用</span><span class="tag">分发</span><span class="tag">团队</span></div><details><summary>展开详情</summary><ul class="details-list"><li>Skills 可显式调用，也可由 Codex 按描述选择。</li><li>Plugins 可包含 Skills、Apps 和 MCP servers。</li><li>适合发布流程、审查例程、文档生成等重复工作。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="extension api" data-accent="violet" data-keywords="MCP model context protocol Figma GitHub Sentry docs browser">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>MCP 外部工具连接</h3><p>通过 Model Context Protocol 连接文档、Figma、GitHub、Sentry、浏览器等外部工具和上下文。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">Tools</span><span class="tag">Resources</span><span class="tag">Prompts</span></div><details><summary>展开详情</summary><ul class="details-list"><li>支持 STDIO 和 Streamable HTTP servers。</li><li>可配置认证、超时、工具 allow/deny 策略。</li><li>App、CLI、IDE 共享 MCP 配置。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local extension" data-accent="coral" data-keywords="browser use in-app browser 浏览器 批注 前端 预览">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM4 9h16M8 7h.01M11 7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>内置浏览器与 Browser Use</h3><p>在 Codex App 内预览网页、留下可视化批注，并让 Codex 操作本地页面验证修复。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">前端</span><span class="tag">批注</span><span class="tag">验证</span></div><details><summary>展开详情</summary><ul class="details-list"><li>适合无需登录的本地服务、文件预览和公开页面。</li><li>Browser Use 可点击、输入、截图、下载页面资源。</li><li>登录态网站应使用常规浏览器或 Chrome extension。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local" data-accent="gold" data-keywords="computer use 电脑控制 桌面应用 GUI">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v11H5zM9 20h6M12 15v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>Computer Use 桌面操作</h3><p>让 Codex 通过看、点、输入来操作 macOS 或 Windows 应用，复现 GUI-only 问题。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">GUI</span><span class="tag">测试</span><span class="tag">桌面</span></div><details><summary>展开详情</summary><ul class="details-list"><li>适合桌面应用、模拟器、设置页和人工难以脚本化的流程。</li><li>会影响项目外状态，因此任务应保持窄范围。</li><li>部分地区可用性存在限制。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="local extension" data-accent="blue" data-keywords="图片 输入 生成 image generation 资产 文档 表格 PPT PDF">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 13l2.5-2.5L14 14l2-2 4 4M8 9h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>图片与非代码产物</h3><p>可把截图作为上下文，也可生成或编辑图片，并预览 PDF、表格、文档和演示稿产物。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">截图</span><span class="tag">图像生成</span><span class="tag">产物预览</span></div><details><summary>展开详情</summary><ul class="details-list"><li>CLI 和 IDE 支持图片输入。</li><li>App、CLI、IDE 可请求图片生成或编辑。</li><li>App 侧边栏可预览多种非代码文件。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="security" data-accent="teal" data-keywords="sandbox approval permissions 权限 沙箱 网络 安全">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 20 7v5c0 5-3.4 8.4-8 9-4.6-.6-8-4-8-9V7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><div><h3>沙箱、审批与权限</h3><p>用 sandbox mode、approval policy、permissions profiles 和网络策略控制 Codex 的行动边界。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">Read-only</span><span class="tag">Workspace</span><span class="tag">Full access</span></div><details><summary>展开详情</summary><ul class="details-list"><li>默认本地工作通常限制在当前工作区。</li><li>越界写入、网络访问或副作用工具可触发审批。</li><li>企业可通过 managed configuration 约束可用模式。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="extension security automation" data-accent="violet" data-keywords="hooks memories subagents rules 自动审批 auto review">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 8h10M7 12h6M5 20h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3>Hooks、Memories 与 Subagents</h3><p>Hooks 注入生命周期脚本，Memories 记住稳定上下文，Subagents 用专门角色并行处理复杂任务。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">生命周期</span><span class="tag">记忆</span><span class="tag">并行代理</span></div><details><summary>展开详情</summary><ul class="details-list"><li>Hooks 可用于日志、策略检查、校验和提示定制。</li><li>Memories 默认关闭，适合保存稳定偏好和项目背景。</li><li>Subagents 需要显式要求，适合大型任务分工。</li></ul></details></div>
+        </article>
+        <article class="feature-card" data-category="api automation" data-accent="coral" data-keywords="SDK app server exec GitHub Action CI API JSON RPC">
+          <div class="feature-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14M5 12h14M5 17h8M18 17l2 2 2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3>程序化接口与 CI</h3><p>用 Codex SDK、App Server、codex exec 和 GitHub Action 把 Codex 接入脚本、产品和 CI/CD。</p></div></div>
+          <div class="feature-body"><div class="card-tags"><span class="tag">SDK</span><span class="tag">App Server</span><span class="tag">CI</span></div><details><summary>展开详情</summary><ul class="details-list"><li>SDK 支持 TypeScript 和 Python 控制 Codex 线程。</li><li>App Server 使用 JSON-RPC，适合构建富客户端集成。</li><li>GitHub Action 可在工作流中运行 codex exec。</li></ul></details></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="matrix" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Capability Matrix</div>
+          <h2>不同入口支持的能力对照</h2>
+        </div>
+        <p class="section-lead">矩阵用于快速判断某个能力更适合在哪里使用。受计划、地区、管理员策略和登录方式影响，实际可用性可能不同。</p>
+      </div>
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>能力</th>
+              <th>Codex App</th>
+              <th>CLI</th>
+              <th>IDE Extension</th>
+              <th>Web / Cloud</th>
+              <th>Programmatic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>本地读写与运行命令</td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status no">-</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>Worktree 隔离</td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td><td><span class="status partial">~</span></td><td><span class="status partial">~</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>云端任务与 PR</td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>代码审查</td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>Skills / Plugins / MCP</td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>内置浏览器与页面批注</td><td><span class="status yes">✓</span></td><td><span class="status no">-</span></td><td><span class="status no">-</span></td><td><span class="status no">-</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>图片输入或图片生成</td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status yes">✓</span></td><td><span class="status partial">~</span></td><td><span class="status partial">~</span></td></tr>
+            <tr><td>CI / 脚本自动化</td><td><span class="status partial">~</span></td><td><span class="status yes">✓</span></td><td><span class="status no">-</span></td><td><span class="status partial">~</span></td><td><span class="status yes">✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="workflow" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Workflow</div>
+          <h2>从想法到合并的一条典型路径</h2>
+        </div>
+        <p class="section-lead">Codex 的强项在于把“理解、修改、验证、审查、协作”串成闭环。每一步都可以停下来让人审阅，也可以按权限配置自动推进。</p>
+      </div>
+      <div class="flow">
+        <article class="flow-step"><span>1</span><h3>给出目标</h3><p>用自然语言描述要实现、修复或理解的问题，必要时附上截图、日志或文件引用。</p></article>
+        <article class="flow-step"><span>2</span><h3>读取上下文</h3><p>Codex 结合仓库、AGENTS.md、IDE 当前文件、MCP 或插件信息建立任务视野。</p></article>
+        <article class="flow-step"><span>3</span><h3>执行修改</h3><p>在 Local、Worktree 或 Cloud 环境中编辑文件、运行命令、补充测试并验证结果。</p></article>
+        <article class="flow-step"><span>4</span><h3>审查反馈</h3><p>通过 Review 面板、/review、GitHub PR 评论或浏览器批注聚焦风险与细节。</p></article>
+        <article class="flow-step"><span>5</span><h3>交付或自动化</h3><p>提交、推送、创建 PR，或把流程沉淀成 Skill、Automation、Action 或 SDK 调用。</p></article>
+      </div>
+    </section>
+
+    <section id="security" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Safety & Governance</div>
+          <h2>让代理能工作，也能被约束</h2>
+        </div>
+        <p class="section-lead">Codex 的安全模型由技术边界、审批策略、网络访问和组织治理共同构成。页面中所有高权限能力都应按最小必要范围启用。</p>
+      </div>
+      <div class="notes-grid">
+        <article class="note-card">
+          <h3>沙箱边界</h3>
+          <p>本地命令运行在受限环境中，常见模式包括 read-only、workspace-write 和 full access。默认应优先让任务留在工作区边界内。</p>
+          <ul class="mini-list"><li>限制写入目录</li><li>限制或关闭命令网络访问</li><li>越界时进入审批流程</li></ul>
+        </article>
+        <article class="note-card">
+          <h3>审批与自动审查</h3>
+          <p>Approval policy 决定 Codex 什么时候暂停请求许可；可用时，自动审批 Review 能对部分请求做风险判断。</p>
+          <ul class="mini-list"><li>用户审批是默认路径</li><li>自动审查不改变沙箱边界</li><li>高风险和破坏性动作要谨慎</li></ul>
+        </article>
+        <article class="note-card">
+          <h3>企业与团队治理</h3>
+          <p>组织可用 managed configuration、管理员策略、审计日志、数据保留和访问控制约束 Codex 的使用范围。</p>
+          <ul class="mini-list"><li>限制可用权限模式</li><li>管理网络与工具策略</li><li>集中配置与合规审计</li></ul>
+        </article>
+      </div>
+      <p class="source-line">
+        内容依据当前 Codex 官方手册整理。由于功能成熟度、账号计划、API Key 登录方式、地区和组织策略会影响可用性，本页以能力图谱为主，不替代官方定价、合规或管理员文档。
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div><span class="mark">Codex 功能图谱</span> · 单文件静态页面</div>
+      <div>适合产品介绍、团队培训和能力速查</div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const filters = Array.from(document.querySelectorAll(".filter"));
+      const cards = Array.from(document.querySelectorAll(".feature-card"));
+      const resultCount = document.getElementById("resultCount");
+      const emptyState = document.getElementById("emptyState");
+      let activeFilter = "all";
+
+      function updateCards() {
+        let visible = 0;
+
+        cards.forEach((card) => {
+          const categories = (card.dataset.category || "").split(/\s+/);
+          const matchesFilter = activeFilter === "all" || categories.includes(activeFilter);
+          const shouldShow = matchesFilter;
+          card.hidden = !shouldShow;
+          if (shouldShow) visible += 1;
+        });
+
+        resultCount.textContent = `显示 ${visible} / ${cards.length} 项功能`;
+        emptyState.classList.toggle("show", visible === 0);
+      }
+
+      filters.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+          filters.forEach((item) => {
+            item.classList.toggle("active", item === button);
+            item.setAttribute("aria-pressed", item === button ? "true" : "false");
+          });
+          updateCards();
+        });
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const target = document.querySelector(link.getAttribute("href"));
+          if (!target) return;
+          event.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      updateCards();
+    })();
+  </script>
+</body>
+</html>
